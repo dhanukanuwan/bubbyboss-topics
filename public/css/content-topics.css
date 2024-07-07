@@ -1,0 +1,44 @@
+/**
+ * All of the CSS for your public-facing functionality should be
+ * included in this file.
+ */
+.title-icon {
+    font-size: 30px;
+}
+.topic-filters {
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+}
+.topic-filters a.active,
+.topic-filters a:hover {
+    border-bottom: 2px solid #333;
+    color: #333;
+}
+.bellows-menu-item-object-obliby_topics.bellows-current-menu-item {
+    margin-bottom: 5px !important;
+    margin-top: 5px !important;
+}
+.bellows-menu-item-object-obliby_topics.bellows-current-menu-item a {
+    background: #00000018 !important;
+}
+.topic-content-outer {
+    max-width: 2180px;
+}
+.topic-item-author {
+    width: 40px;
+    min-width: 40px;
+}
+
+.topic-item-img img {
+    border-radius: 6px;
+    min-height: 204px;
+}
+.topic-item-img {
+    max-height: 204px;
+    border-radius: 6px;
+}
+.topic-item.topic-video .single-activity-video,
+.topic-item.topic-video .bb-activity-video-elem {
+    min-height: 204px;
+    max-height: 204px;
+    border-radius: 6px;
+}
