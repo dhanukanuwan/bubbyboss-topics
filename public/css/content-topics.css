@@ -42,3 +42,6 @@
     max-height: 204px;
     border-radius: 6px;
 }
+button.load-more-icon .bb-icon-l {
+    font-size: 24px;
+}

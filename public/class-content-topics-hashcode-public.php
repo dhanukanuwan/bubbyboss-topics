@@ -63,6 +63,7 @@ class Content_Topics_Hashcode_Public {
 		if ( is_singular( 'obliby_topics' ) ) {
 			wp_enqueue_style( 'obliby-bootstrap-grid', plugin_dir_url( __FILE__ ) . 'css/bootstrap-grid.min.css', array(), '5.3.4', 'all' );
 			wp_enqueue_style( 'obliby-css', plugin_dir_url( __FILE__ ) . 'css/content-topics.css', array(), filemtime( plugin_dir_path( __FILE__ ) . 'css/content-topics.css' ), 'all' );
+			wp_enqueue_script( 'obliby-js', plugin_dir_url( __FILE__ ) . 'js/content-topics.js', array( 'jquery' ), filemtime( plugin_dir_path( __FILE__ ) . 'js/content-topics.js' ), true );
 		}
 	}
 
@@ -116,27 +117,35 @@ class Content_Topics_Hashcode_Public {
 			return array_merge( $data, $topic_videos );
 		}
 
-		$topic_posts   = $this->obliby_get_topic_posts( $topic_slug );
-		$topic_courses = $this->obliby_get_topic_courses( $topic_slug );
-		$topic_images  = $this->obliby_get_topic_media( $topic_title, 'photo' );
-		$topic_videos  = $this->obliby_get_topic_media( $topic_title, 'video' );
+		$all_content = $this->obliby_get_all_content_types( $topic );
 
-		$this->obliby_get_all_content_types( $topic );
+		if ( ! empty( $all_content ) && ! is_wp_error( $all_content ) ) {
 
-		if ( ! empty( $topic_posts ) ) {
-			$data = array_merge( $data, $topic_posts );
+			$content_data = array();
+
+			foreach ( $all_content as $content_item ) {
+
+				if ( isset( $content_item->type ) ) {
+
+					if ( 'post' === $content_item->type ) {
+
+						$content_data[] = $this->obliby_get_post_data( $content_item->ID, $content_item->type );
+					}
+
+					if ( 'courses' === $content_item->type ) {
+						$content_data[] = $this->obliby_get_post_data( $content_item->ID, 'course' );
+					}
+
+					if ( 'photo' === $content_item->type || 'video' === $content_item->type ) {
+
+						$content_data[] = $this->obliby_get_topic_media_content( $content_item, $content_item->type );
+					}
+				}
+			}
 		}
 
-		if ( ! empty( $topic_courses ) ) {
-			$data = array_merge( $data, $topic_courses );
-		}
-
-		if ( ! empty( $topic_images ) ) {
-			$data = array_merge( $data, $topic_images );
-		}
-
-		if ( ! empty( $topic_videos ) ) {
-			$data = array_merge( $data, $topic_videos );
+		if ( ! empty( $content_data ) ) {
+			$data = array_merge( $data, $content_data );
 		}
 
 		return $data;
@@ -225,8 +234,9 @@ class Content_Topics_Hashcode_Public {
 	 *
 	 * @since    1.0.0
 	 * @param array $topic_data .
+	 * @param int   $offset .
 	 */
-	private function obliby_get_all_content_types( $topic_data ) {
+	private function obliby_get_all_content_types( $topic_data, $offset = 0 ) {
 
 		global $wpdb;
 
@@ -240,21 +250,22 @@ class Content_Topics_Hashcode_Public {
 				"SELECT *
 						FROM (
 							SELECT wposts.ID,wposts.post_author AS user_id,wposts.post_title AS title,wposts.post_parent AS album_id,wposts.post_type AS type,wposts.menu_order AS activity_id,wposts.comment_count AS media_id FROM {$wpdb->posts} AS wposts
-							 		LEFT JOIN {$wpdb->postmeta} AS wpostmeta ON (wposts.ID = wpostmeta.post_id)
-									LEFT JOIN {$wpdb->term_relationships} AS tax_rel ON (wposts.ID = tax_rel.object_id)
-									LEFT JOIN {$wpdb->term_taxonomy} AS term_tax ON (tax_rel.term_taxonomy_id = term_tax.term_taxonomy_id)
-									LEFT JOIN {$wpdb->terms} AS terms ON (terms.term_id = term_tax.term_id)
+								LEFT JOIN {$wpdb->postmeta} AS wpostmeta ON (wposts.ID = wpostmeta.post_id)
+								LEFT JOIN {$wpdb->term_relationships} AS tax_rel ON (wposts.ID = tax_rel.object_id)
+								LEFT JOIN {$wpdb->term_taxonomy} AS term_tax ON (tax_rel.term_taxonomy_id = term_tax.term_taxonomy_id)
+								LEFT JOIN {$wpdb->terms} AS terms ON (terms.term_id = term_tax.term_id)
 							WHERE (wposts.post_status = 'publish' AND terms.slug = %s AND wposts.post_type = 'post' AND term_tax.taxonomy = 'category')
 							OR (wposts.post_status = 'publish' AND terms.slug = %s AND wposts.post_type = 'courses' AND term_tax.taxonomy = 'course-category')
 							UNION ALL
 							SELECT m.attachment_id AS ID,m.user_id,m.title,m.album_id,m.type,m.activity_id,m.id AS media_id from $media_table AS m
 								LEFT JOIN $albums_table AS a ON m.album_id = a.id WHERE a.title = %s AND a.privacy = %s
 						) posts
-				GROUP BY posts.ID LIMIT 15 OFFSET 0",
+				GROUP BY posts.ID LIMIT 5 OFFSET %d",
 				$topic_slug,
 				$topic_slug,
 				$topic_title,
 				'public',
+				$offset
 			),
 			OBJECT
 		);
