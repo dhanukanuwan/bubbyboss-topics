@@ -117,11 +117,29 @@ class Content_Topics_Hashcode_Public {
 			return array_merge( $data, $topic_videos );
 		}
 
-		$all_content = $this->obliby_get_all_content_types( $topic );
+		$all_content = $this->obliby_get_all_content_type_data( $topic, 1 );
+
+		if ( ! empty( $all_content ) ) {
+			$data = array_merge( $data, $all_content );
+		}
+
+		return $data;
+	}
+
+	/**
+	 * Get posts related to given topic.
+	 *
+	 * @since    1.0.0
+	 * @param string $topic .
+	 * @param int    $page_number .
+	 */
+	private function obliby_get_all_content_type_data( $topic, $page_number ) {
+
+		$content_data = array();
+
+		$all_content = $this->obliby_get_all_content_types( $topic, $page_number );
 
 		if ( ! empty( $all_content ) && ! is_wp_error( $all_content ) ) {
-
-			$content_data = array();
 
 			foreach ( $all_content as $content_item ) {
 
@@ -144,11 +162,7 @@ class Content_Topics_Hashcode_Public {
 			}
 		}
 
-		if ( ! empty( $content_data ) ) {
-			$data = array_merge( $data, $content_data );
-		}
-
-		return $data;
+		return $content_data;
 	}
 
 	/**
@@ -236,7 +250,7 @@ class Content_Topics_Hashcode_Public {
 	 * @param array $topic_data .
 	 * @param int   $offset .
 	 */
-	private function obliby_get_all_content_types( $topic_data, $offset = 0 ) {
+	private function obliby_get_all_content_types( $topic_data, $offset = 1 ) {
 
 		global $wpdb;
 
@@ -245,9 +259,15 @@ class Content_Topics_Hashcode_Public {
 		$albums_table = $wpdb->prefix . 'bp_media_albums';
 		$media_table  = $wpdb->prefix . 'bp_media';
 
+		if ( 1 > $offset ) {
+			$offset = 1;
+		}
+
+		$offset_number = 5 * ( $offset - 1 );
+
 		$topic_posts = $wpdb->get_results(
 			$wpdb->prepare(
-				"SELECT *
+				"SELECT DISTINCT *
 						FROM (
 							SELECT wposts.ID,wposts.post_author AS user_id,wposts.post_title AS title,wposts.post_parent AS album_id,wposts.post_type AS type,wposts.menu_order AS activity_id,wposts.comment_count AS media_id FROM {$wpdb->posts} AS wposts
 								LEFT JOIN {$wpdb->postmeta} AS wpostmeta ON (wposts.ID = wpostmeta.post_id)
@@ -260,15 +280,17 @@ class Content_Topics_Hashcode_Public {
 							SELECT m.attachment_id AS ID,m.user_id,m.title,m.album_id,m.type,m.activity_id,m.id AS media_id from $media_table AS m
 								LEFT JOIN $albums_table AS a ON m.album_id = a.id WHERE a.title = %s AND a.privacy = %s
 						) posts
-				GROUP BY posts.ID LIMIT 5 OFFSET %d",
+				GROUP BY posts.ID ORDER BY posts.ID DESC LIMIT 5 OFFSET %d",
 				$topic_slug,
 				$topic_slug,
 				$topic_title,
 				'public',
-				$offset
+				$offset_number
 			),
 			OBJECT
 		);
+
+		//error_log(print_r($topic_posts,true));
 
 		return $topic_posts;
 	}
@@ -395,5 +417,102 @@ class Content_Topics_Hashcode_Public {
 		);
 
 		return $media_data;
+	}
+
+	/**
+	 * Topic content pagination endpoint.
+	 *
+	 * @since    1.0.0
+	 */
+	public function obliby_topic_pagination_endpoint() {
+		register_rest_route(
+			'oblibytopics/v1',
+			'/getpagination',
+			array(
+				array(
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => array( $this, 'obliby_topic_pagination_endpoint_callback' ),
+					'args'                => array(
+						'type'      => array(
+							'required' => true,
+							'type'     => 'string',
+						),
+						'topicdata' => array(
+							'required' => true,
+							'type'     => 'string',
+						),
+						'offset'    => array(
+							'required' => true,
+							'type'     => 'number',
+						),
+					),
+					'permission_callback' => '__return_true',
+				),
+			)
+		);
+	}
+
+	/**
+	 * Add new organization callback.
+	 *
+	 * @param    array $request request array.
+	 * @since    1.0.0
+	 */
+	public function obliby_topic_pagination_endpoint_callback( $request ) {
+
+		$type       = $request->get_param( 'type' );
+		$offset     = $request->get_param( 'offset' );
+		$topic_data = $request->get_param( 'topicdata' );
+
+		if ( ! empty( $topic_data ) ) {
+			$topic_data = json_decode( wp_unslash( $topic_data ), true );
+		}
+
+		$new_offset = (int) $offset + 1;
+
+		$data    = array();
+		$success = false;
+		$message = '';
+
+		$topic_content = $this->obliby_get_all_content_type_data( $topic_data, $new_offset );
+
+		if ( ! empty( $topic_content ) && ! is_wp_error( $topic_content ) ) {
+
+			foreach ( $topic_content as $topic_item ) {
+				ob_start();
+				include plugin_dir_path( __DIR__ ) . 'public/partials/template-parts/topic-' . $topic_item['type'] . '.php';
+				$data[] = ob_get_contents();
+				ob_end_clean();
+			}
+
+			$success = true;
+		}
+
+		$response = rest_ensure_response(
+			array(
+				'data'    => $data,
+				'success' => $success,
+				'message' => $message,
+			)
+		);
+
+		return $response;
+	}
+
+	/**
+	 * Serve topic post type single template from the plugin if it's not available in the theme.
+	 *
+	 * @param    string $template .
+	 * @since    1.0.0
+	 */
+	public function obliby_topic_post_type_single_template( $template ) {
+
+		global $post;
+
+		if ( 'obliby_topics' === $post->post_type && locate_template( array( 'single-obliby_topics.php' ) ) !== $template ) {
+			return plugin_dir_path( __FILE__ ) . 'partials/single-obliby_topics.php';
+		}
+
+		return $template;
 	}
 }
