@@ -108,3 +108,8 @@ button.load-more-icon .bb-icon-l {
     --bs-spinner-animation-speed: 1.5s;
   }
 }
+
+button.load-more-icon .spinner-border {
+  width: 1.3rem;
+  height: 1.3rem;
+}

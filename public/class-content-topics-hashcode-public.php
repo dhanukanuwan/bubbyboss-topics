@@ -50,7 +50,6 @@ class Content_Topics_Hashcode_Public {
 
 		$this->plugin_name = $plugin_name;
 		$this->version     = $version;
-
 	}
 
 	/**
@@ -170,10 +169,13 @@ class Content_Topics_Hashcode_Public {
 	 *
 	 * @since    1.0.0
 	 * @param string $topic .
+	 * @param int    $offset .
 	 */
-	private function obliby_get_topic_posts( $topic ) {
+	private function obliby_get_topic_posts( $topic, $offset = 1 ) {
 
 		$topic_posts = array();
+
+		$offset_number = 15 * ( $offset - 1 );
 
 		$category = get_category_by_slug( $topic );
 
@@ -183,11 +185,12 @@ class Content_Topics_Hashcode_Public {
 
 		$post_ids = get_posts(
 			array(
-				'post_type'   => 'post',
-				'numberposts' => 50,
-				'category'    => $category->term_id,
-				'post_status' => 'publish',
-				'fields'      => 'ids',
+				'post_type'      => 'post',
+				'category'       => $category->term_id,
+				'post_status'    => 'publish',
+				'fields'         => 'ids',
+				'posts_per_page' => 15,
+				'offset'         => $offset_number,
 			)
 		);
 
@@ -206,10 +209,13 @@ class Content_Topics_Hashcode_Public {
 	 *
 	 * @since    1.0.0
 	 * @param string $topic .
+	 * @param int    $offset .
 	 */
-	private function obliby_get_topic_courses( $topic ) {
+	private function obliby_get_topic_courses( $topic, $offset = 1 ) {
 
 		$topic_courses = array();
+
+		$offset_number = 15 * ( $offset - 1 );
 
 		$category = get_term_by( 'slug', $topic, 'course-category' );
 
@@ -219,11 +225,12 @@ class Content_Topics_Hashcode_Public {
 
 		$post_ids = get_posts(
 			array(
-				'post_type'   => 'courses',
-				'numberposts' => 50,
-				'post_status' => 'publish',
-				'fields'      => 'ids',
-				'tax_query'   => array( //phpcs:ignore
+				'post_type'      => 'courses',
+				'post_status'    => 'publish',
+				'fields'         => 'ids',
+				'posts_per_page' => 15,
+				'offset'         => $offset_number,
+				'tax_query'      => array( //phpcs:ignore
 					array(
 						'taxonomy' => 'course-category',
 						'field'    => 'slug',
@@ -263,7 +270,7 @@ class Content_Topics_Hashcode_Public {
 			$offset = 1;
 		}
 
-		$offset_number = 5 * ( $offset - 1 );
+		$offset_number = 15 * ( $offset - 1 );
 
 		$topic_posts = $wpdb->get_results(
 			$wpdb->prepare(
@@ -280,7 +287,7 @@ class Content_Topics_Hashcode_Public {
 							SELECT m.attachment_id AS ID,m.user_id,m.title,m.album_id,m.type,m.activity_id,m.id AS media_id from $media_table AS m
 								LEFT JOIN $albums_table AS a ON m.album_id = a.id WHERE a.title = %s AND a.privacy = %s
 						) posts
-				GROUP BY posts.ID ORDER BY posts.ID DESC LIMIT 5 OFFSET %d",
+				GROUP BY posts.ID ORDER BY posts.ID DESC LIMIT 15 OFFSET %d",
 				$topic_slug,
 				$topic_slug,
 				$topic_title,
@@ -289,8 +296,6 @@ class Content_Topics_Hashcode_Public {
 			),
 			OBJECT
 		);
-
-		//error_log(print_r($topic_posts,true));
 
 		return $topic_posts;
 	}
@@ -341,8 +346,9 @@ class Content_Topics_Hashcode_Public {
 	 * @since    1.0.0
 	 * @param string $topic .
 	 * @param string $type .
+	 * @param int    $offset .
 	 */
-	private function obliby_get_topic_media( $topic, $type = '' ) {
+	private function obliby_get_topic_media( $topic, $type = '', $offset = 1 ) {
 
 		global $wpdb;
 		$albums_table = $wpdb->prefix . 'bp_media_albums';
@@ -350,7 +356,13 @@ class Content_Topics_Hashcode_Public {
 
 		$media_data = array();
 
-		$media_result = $wpdb->get_results( $wpdb->prepare( "SELECT m.attachment_id AS ID,m.user_id,m.title,m.album_id,m.type,m.activity_id,m.id AS media_id from $media_table AS m LEFT JOIN $albums_table AS a ON m.album_id = a.id WHERE a.title = %s AND a.privacy = %s AND m.type = %s LIMIT 50",  $topic, 'public', $type ) , OBJECT ); //phpcs:ignore
+		if ( 1 > $offset ) {
+			$offset = 1;
+		}
+
+		$offset_number = 15 * ( $offset - 1 );
+
+		$media_result = $wpdb->get_results( $wpdb->prepare( "SELECT m.attachment_id AS ID,m.user_id,m.title,m.album_id,m.type,m.activity_id,m.id AS media_id from $media_table AS m LEFT JOIN $albums_table AS a ON m.album_id = a.id WHERE a.title = %s AND a.privacy = %s AND m.type = %s LIMIT 15 OFFSET %d",  $topic, 'public', $type, $offset_number ) , OBJECT ); //phpcs:ignore
 
 		if ( ! empty( $media_result ) && ! is_wp_error( $media_result ) ) {
 
@@ -474,7 +486,27 @@ class Content_Topics_Hashcode_Public {
 		$success = false;
 		$message = '';
 
-		$topic_content = $this->obliby_get_all_content_type_data( $topic_data, $new_offset );
+		$topic_content = array();
+
+		if ( 'all' === $type ) {
+			$topic_content = $this->obliby_get_all_content_type_data( $topic_data, $new_offset );
+		}
+
+		if ( 'posts' === $type ) {
+			$topic_content = $this->obliby_get_topic_posts( $topic_data['slug'], $new_offset );
+		}
+
+		if ( 'courses' === $type ) {
+			$topic_content = $this->obliby_get_topic_courses( $topic_data['slug'], $new_offset );
+		}
+
+		if ( 'videos' === $type ) {
+			$topic_content = $this->obliby_get_topic_media( $topic_data['title'], 'video', $new_offset );
+		}
+
+		if ( 'pictures' === $type ) {
+			$topic_content = $this->obliby_get_topic_media( $topic_data['title'], 'photo', $new_offset );
+		}
 
 		if ( ! empty( $topic_content ) && ! is_wp_error( $topic_content ) ) {
 

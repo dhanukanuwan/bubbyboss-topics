@@ -80,7 +80,7 @@ get_header( 'topic' );
 		</div>
 
 		<?php if ( ! empty( $topic_content ) ) : ?>
-			<div class="topic-content-outer ps-2 ps-lg-4 mt-4">
+			<div class="topic-content-outer ps-2 ps-lg-4 mt-4 mb-5">
 				<div class="row row-cols-xxl-5 g-2" id="topic-content-row">
 					
 					<?php foreach ( $topic_content as $topic_item ) : ?>
@@ -90,17 +90,21 @@ get_header( 'topic' );
 					<?php endforeach; ?>
 
 				</div>
+
+				<?php if ( 15 === count( $topic_content ) ) : ?>
 				
-				<div class="row">
-					<div class="col-12 mt-4 mb-5">
-						<div class="d-flex justify-content-center">
-							<button type="button" id="topic_load_more" class="load-more-icon d-flex align-items-center px-4" filter="<?php echo $active_filter ? esc_attr( $active_filter ) : 'all'; ?>" offset="1" numberofposts="5" topicdata="<?php echo esc_attr( wp_slash( wp_json_encode( $topic_data ) ) ); ?>">
-								<span class="me-1"><?php esc_html_e( 'Load more', 'buddyboss' ); ?></span>
-								<span class="bb-icon-angle-down bb-icon-l"></span>
-							</button>
+					<div class="row">
+						<div class="col-12 mt-4 mb-5">
+							<div class="d-flex justify-content-center">
+								<button type="button" id="topic_load_more" class="load-more-icon d-flex align-items-center px-4" filter="<?php echo $active_filter ? esc_attr( $active_filter ) : 'all'; ?>" offset="1" numberofposts="15" topicdata="<?php echo esc_attr( wp_slash( wp_json_encode( $topic_data ) ) ); ?>">
+									<span class="me-1"><?php esc_html_e( 'Load more', 'buddyboss' ); ?></span>
+									<span class="bb-icon-angle-down bb-icon-l"></span>
+								</button>
+							</div>
 						</div>
 					</div>
-				</div>
+
+				<?php endif; ?>
 
 			</div>
 		

@@ -18,7 +18,7 @@
 				let offset = jQuery( '#topic_load_more' ).attr( 'offset' );
 
 				const topicsContentRow = jQuery( '#topic-content-row' );
-				const loadingIcon = '<div class="spinner-border text-white" role="status"></div>';
+				const loadingIcon = '<div class="spinner-border text-white my-1 ms-1" role="status"></div>';
 				const downIcon = '<span class="bb-icon-angle-down bb-icon-l"></span>';
 
 				jQuery( '#topic_load_more' ).find( '.bb-icon-angle-down' ).remove();
@@ -35,12 +35,14 @@
 					if ( topicResponse.success === true &&  topicResponse.data.length > 0 ) {
 						topicResponse.data.forEach((topic) => topicsContentRow.append( topic));
 
+						jQuery( '#topic_load_more' ).attr( 'offset', parseInt( offset, 10 ) + 1 );
+
 						if ( topicResponse.data.length < parseInt( numberOfPosts, 10 ) ) {
-							jQuery( '#topic_load_more' ).addClass( 'd-none' );
+							jQuery( '#topic_load_more' ).remove();
 						}
 
 					} else {
-						jQuery( '#topic_load_more' ).addClass( 'd-none' );
+						jQuery( '#topic_load_more' ).remove();
 					}
 
 				}
