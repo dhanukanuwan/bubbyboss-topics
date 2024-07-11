@@ -2,27 +2,35 @@
 	'use strict';
 
 	window.Obliby = {
-        init: function () {
+        init: () => {
 
           Obliby.loadMoreButton();
+		  Obliby.infinityScroll();
 
         },
 
-		loadMoreButton: function() {
+		loadMoreButton: () => {
 			
 			jQuery( '#topic_load_more' ).on( 'click', async () => {
 
-				const filterType = jQuery( '#topic_load_more' ).attr( 'filter' );
-				const numberOfPosts = jQuery( '#topic_load_more' ).attr( 'numberofposts' );
-				const topicData = jQuery( '#topic_load_more' ).attr( 'topicdata' );
-				let offset = jQuery( '#topic_load_more' ).attr( 'offset' );
+				const loadMoreBtn = jQuery( '#topic_load_more' );
+
+				if ( loadMoreBtn.hasClass( 'loading' ) ) {
+					return;
+				}
+
+				const filterType = loadMoreBtn.attr( 'filter' );
+				const numberOfPosts = loadMoreBtn.attr( 'numberofposts' );
+				const topicData = loadMoreBtn.attr( 'topicdata' );
+				let offset = loadMoreBtn.attr( 'offset' );
 
 				const topicsContentRow = jQuery( '#topic-content-row' );
 				const loadingIcon = '<div class="spinner-border text-white my-1 ms-1" role="status"></div>';
 				const downIcon = '<span class="bb-icon-angle-down bb-icon-l"></span>';
 
-				jQuery( '#topic_load_more' ).find( '.bb-icon-angle-down' ).remove();
-				jQuery( '#topic_load_more' ).append( loadingIcon );
+				loadMoreBtn.find( '.bb-icon-angle-down' ).remove();
+				loadMoreBtn.append( loadingIcon );
+				loadMoreBtn.addClass( 'loading' );
 
 				const response = await fetch(
 					`${window.location.origin}/wp-json/oblibytopics/v1/getpagination/?type=${filterType}&offset=${offset}&topicdata=${topicData}`
@@ -35,26 +43,53 @@
 					if ( topicResponse.success === true &&  topicResponse.data.length > 0 ) {
 						topicResponse.data.forEach((topic) => topicsContentRow.append( topic));
 
-						jQuery( '#topic_load_more' ).attr( 'offset', parseInt( offset, 10 ) + 1 );
+						loadMoreBtn.attr( 'offset', parseInt( offset, 10 ) + 1 );
 
 						if ( topicResponse.data.length < parseInt( numberOfPosts, 10 ) ) {
-							jQuery( '#topic_load_more' ).remove();
+							loadMoreBtn.remove();
 						}
 
 					} else {
-						jQuery( '#topic_load_more' ).remove();
+						loadMoreBtn.remove();
 					}
 
 				}
 
-				jQuery( '#topic_load_more' ).find( '.spinner-border' ).remove();
-				jQuery( '#topic_load_more' ).append( downIcon );
+				loadMoreBtn.find( '.spinner-border' ).remove();
+				loadMoreBtn.append( downIcon );
+				loadMoreBtn.removeClass( 'loading' );
 
 				if ( parseInt( jQuery(document).width(), 10 ) > 1200 ) {
-					jQuery("html, body").animate({ scrollTop: jQuery(document).height() }, 1000);
+					const y = jQuery(window).scrollTop(); 
+					jQuery("html, body").animate({ scrollTop: y + 50 }, 1000);
 				}
 
 			})
+
+		},
+
+		infinityScroll: () => {
+
+			jQuery( window ).on( "scroll", () => {
+				
+				const scrollHeight = window.scrollY || $(window).scrollTop();                                          
+				if ((window.innerHeight + scrollHeight) >= document.body.offsetHeight) {
+					
+					setTimeout(() => {
+
+						const loadMoreBtn = jQuery( 'body' ).find( '#topic_load_more' );
+						
+						if ( loadMoreBtn && loadMoreBtn.length > 0 ) {
+
+							if ( ! loadMoreBtn.hasClass( 'loading' ) ) {
+								loadMoreBtn.trigger( 'click' );
+							}
+						}
+
+					}, "800");
+				} 
+
+			} );
 
 		}
         
