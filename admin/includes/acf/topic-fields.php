@@ -24,16 +24,59 @@ acf_add_local_field_group(
 		'title'    => 'Topic Content',
 		'fields'   => array(
 			array(
-				'key'          => 'field_topic_icon',
-				'label'        => 'Topic Icon',
-				'name'         => 'topic_icon',
-				'type'         => 'select',
-				'instructions' => 'You can easily search icons from here. <a href="https://www.buddyboss.com/resources/font-cheatsheet/" target="_blank">https://www.buddyboss.com/resources/font-cheatsheet/</a>',
-				'wrapper'      => array(
-					'width' => '30',
+				'key'           => 'field_topic_icon_type',
+				'label'         => 'Icon Type',
+				'name'          => 'topic_icon_type',
+				'type'          => 'select',
+				'wrapper'       => array(
+					'width' => '25',
 				),
-				'choices'      => $icon_choices,
-				'ui'           => 1,
+				'choices'       => array(
+					'buddyboss' => 'BuddyBoss',
+					'custom'    => 'Custom',
+				),
+				'ui'            => 1,
+				'default_value' => 'buddyboss',
+			),
+			array(
+				'key'               => 'field_icon_image',
+				'label'             => 'Icon Image',
+				'name'              => 'icon_image',
+				'type'              => 'image',
+				'conditional_logic' => array(
+					array(
+						array(
+							'field'    => 'field_topic_icon_type',
+							'operator' => '==',
+							'value'    => 'custom',
+						),
+					),
+				),
+				'wrapper'           => array(
+					'width' => '25',
+				),
+				'return_format'     => 'url',
+			),
+			array(
+				'key'               => 'field_topic_icon',
+				'label'             => 'Topic Icon',
+				'name'              => 'topic_icon',
+				'type'              => 'select',
+				'instructions'      => 'You can easily search icons from here. <a href="https://www.buddyboss.com/resources/font-cheatsheet/" target="_blank">https://www.buddyboss.com/resources/font-cheatsheet/</a>',
+				'wrapper'           => array(
+					'width' => '25',
+				),
+				'choices'           => $icon_choices,
+				'ui'                => 1,
+				'conditional_logic' => array(
+					array(
+						array(
+							'field'    => 'field_topic_icon_type',
+							'operator' => '==',
+							'value'    => 'buddyboss',
+						),
+					),
+				),
 			),
 			array(
 				'key'     => 'field_topic_heading',
@@ -41,7 +84,7 @@ acf_add_local_field_group(
 				'name'    => 'topic_heading',
 				'type'    => 'text',
 				'wrapper' => array(
-					'width' => '70',
+					'width' => '50',
 				),
 			),
 		),

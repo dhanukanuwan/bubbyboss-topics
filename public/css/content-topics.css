@@ -46,6 +46,10 @@ button.load-more-icon .bb-icon-l {
     font-size: 24px;
 }
 
+.title-icon-img {
+  max-width: 60px;
+}
+
 .spinner-grow,
 .spinner-border {
   display: inline-block;

@@ -12,7 +12,18 @@ get_header( 'topic' );
 
 	while ( have_posts() ) : the_post(); //phpcs:ignore
 
-	$topic_icon    = get_field( 'topic_icon' );
+	$topic_icon     = '';
+	$topic_icon_img = '';
+
+	$topic_icon_type = get_field( 'topic_icon_type' );
+
+	if ( 'buddyboss' === $topic_icon_type ) {
+		$topic_icon = get_field( 'topic_icon' );
+	} elseif ( 'custom' === $topic_icon_type ) {
+		$topic_icon_img = get_field( 'icon_image' );
+	}
+
+
 	$active_filter = get_query_var( 'topicfilter' );
 	$topic_slug    = get_post_field( 'post_name', get_the_ID() );
 	$topic_filters = apply_filters( 'obliby_topic_content_filters', array(), $active_filter );
@@ -41,9 +52,16 @@ get_header( 'topic' );
 			<div class="col-12">
 				<div class="d-flex pt-4 ps-2 ps-lg-4 align-items-center">
 
-					<?php if ( ! empty( $topic_icon ) ) : ?>
+					<?php if ( 'buddyboss' === $topic_icon_type && ! empty( $topic_icon ) ) : ?>
 						<span class="pe-2 title-icon"><i class="bb-icon-l buddyboss bb-icon-<?php echo esc_attr( $topic_icon ); ?>" aria-hidden="true"></i></span>
 					<?php endif; ?>
+
+					<?php if ( 'custom' === $topic_icon_type && ! empty( $topic_icon_img ) ) : ?>
+						<div class="pe-2 title-icon-img">
+							<img src="<?php echo esc_url( $topic_icon_img ); ?>" class="rounded-circle" alt="<?php echo esc_attr( $topic_data['title'] ); ?>" />
+						</div>
+					<?php endif; ?>
+
 					<h1 class="mb-0"><?php the_title(); ?></h1>
 				</div>
 

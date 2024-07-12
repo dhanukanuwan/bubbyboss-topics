@@ -14,8 +14,9 @@
 	<div class="topic-item topic-video">
 		
 		<?php if ( isset( $topic_item['video_data'] ) && ! empty( $topic_item['video_data'] ) ) : ?>
-			<div class="topic-item-img mb-3 overflow-hidden">
+			<div class="topic-item-img mb-3 position-relative overflow-hidden">
 				<?php echo $topic_item['video_data']['content']; //phpcs:ignore ?>
+				<a href="<?php echo esc_url( $topic_item['activity_url'] ); ?>" class="position-absolute w-100 h-100 top-0 start-0"></a>
 			</div>
 		<?php endif; ?>
 
