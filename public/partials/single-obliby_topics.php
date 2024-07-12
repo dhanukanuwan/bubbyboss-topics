@@ -80,7 +80,7 @@ get_header( 'topic' );
 		</div>
 		
 		<div class="row">
-			<div class="col-12">
+			<div class="col-12 mt-4">
 
 				<?php if ( ! empty( $topic_filters ) ) : ?>
 					<div class="topic-filters">
