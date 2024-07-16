@@ -43,7 +43,8 @@ get_header( 'topic' );
 		'title' => get_the_title(),
 	);
 
-	$topic_content = apply_filters( 'obliby_topic_content_data', array(), $topic_data, $active_filter_array );
+	$topic_content    = apply_filters( 'obliby_topic_content_data', array(), $topic_data, $active_filter_array );
+	$content_btn_data = apply_filters( 'obliby_topic_add_content_btn_data', array(), $active_filter, $topic_filters, $topic_data );
 
 	?>
 
@@ -83,14 +84,26 @@ get_header( 'topic' );
 			<div class="col-12 mt-4">
 
 				<?php if ( ! empty( $topic_filters ) ) : ?>
-					<div class="topic-filters">
-						<div class="ps-2 ps-lg-4 d-flex">
-							
-							<a href="<?php echo esc_url( $topic_link ); ?>" class="px-3 pb-2 <?php echo $active_filter ? '' : 'active'; ?>"><?php echo esc_html_e( 'All', 'buddyboss' ); ?></a>
+					<div class="topic-filters d-flex">
+						<div class="topic-filters-inner d-flex w-100">
+							<div class="ps-2 ps-lg-4 d-flex flex-grow-1">
+								
+								<a href="<?php echo esc_url( $topic_link ); ?>" class="px-3 pb-2 <?php echo $active_filter ? '' : 'active'; ?>"><?php echo esc_html_e( 'All', 'buddyboss' ); ?></a>
 
-							<?php foreach ( $topic_filters as $topic_filter ) : ?>
-								<a href="<?php echo esc_url( $topic_link . $topic_filter['slug'] ); ?>" class="px-3 pb-2 <?php echo esc_attr( $topic_filter['classes'] ); ?>"><?php echo esc_html( $topic_filter['name'] ); ?></a>
-							<?php endforeach; ?>
+								<?php foreach ( $topic_filters as $topic_filter ) : ?>
+									<a href="<?php echo esc_url( $topic_link . $topic_filter['slug'] ); ?>" class="px-3 pb-2 <?php echo esc_attr( $topic_filter['classes'] ); ?>"><?php echo esc_html( $topic_filter['name'] ); ?></a>
+								<?php endforeach; ?>
+							</div>
+							<div class="content-btn-wrap mb-3 me-3">
+								
+								<?php if ( ! empty( $content_btn_data ) ) : ?>
+									<a href="<?php echo esc_url( $content_btn_data['btn_url'] ); ?>" class="pe-4 button">
+										<i class="bb-icon-file-plus bb-icon-l"></i>
+										<span class="ms-2"><?php echo esc_html( $content_btn_data['btn_text'] ); ?></span>
+									</a>
+								<?php endif; ?>
+
+							</div>
 						</div>
 					</div>
 				<?php endif; ?>

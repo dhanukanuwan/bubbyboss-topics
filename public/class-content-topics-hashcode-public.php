@@ -64,6 +64,30 @@ class Content_Topics_Hashcode_Public {
 			wp_enqueue_style( 'obliby-css', plugin_dir_url( __FILE__ ) . 'css/content-topics.css', array(), filemtime( plugin_dir_path( __FILE__ ) . 'css/content-topics.css' ), 'all' );
 			wp_enqueue_script( 'obliby-js', plugin_dir_url( __FILE__ ) . 'js/content-topics.js', array( 'jquery' ), filemtime( plugin_dir_path( __FILE__ ) . 'js/content-topics.js' ), true );
 		}
+
+		$buddyboss_plugin_options = get_option( 'buddyboss_sap_plugin_options' );
+
+		if ( ! empty( $buddyboss_plugin_options ) && isset( $buddyboss_plugin_options['create-new-post'] ) ) {
+
+			$new_post_page_id = $buddyboss_plugin_options['create-new-post'];
+
+			if ( is_page( $new_post_page_id ) ) {
+
+				if ( isset( $_GET['nonce'] ) && isset( $_GET['category'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['nonce'] ) ), 'obliby_nonce' ) ) {
+
+					$category_id = sanitize_text_field( wp_unslash( $_GET['category'] ) );
+
+					wp_enqueue_script( 'obliby-post-js', plugin_dir_url( __FILE__ ) . 'js/new-post.js', array( 'jquery' ), filemtime( plugin_dir_path( __FILE__ ) . 'js/new-post.js' ), true );
+
+					$ajax_object = array(
+						'categoryID' => $category_id,
+					);
+
+					wp_localize_script( 'obliby-post-js', 'oblibyAjax', $ajax_object );
+
+				}
+			}
+		}
 	}
 
 	/**
@@ -104,7 +128,7 @@ class Content_Topics_Hashcode_Public {
 			return array_merge( $data, $topic_courses );
 		}
 
-		if ( 'pictures' === $filter_slug ) {
+		if ( 'photos' === $filter_slug ) {
 			$topic_images = $this->obliby_get_topic_media( $topic_title, 'photo' );
 
 			return array_merge( $data, $topic_images );
@@ -362,7 +386,7 @@ class Content_Topics_Hashcode_Public {
 
 		$offset_number = 15 * ( $offset - 1 );
 
-		$media_result = $wpdb->get_results( $wpdb->prepare( "SELECT m.attachment_id AS ID,m.user_id,m.title,m.album_id,m.type,m.activity_id,m.id AS media_id from $media_table AS m LEFT JOIN $albums_table AS a ON m.album_id = a.id WHERE a.title = %s AND a.privacy = %s AND m.type = %s LIMIT 15 OFFSET %d",  $topic, 'public', $type, $offset_number ) , OBJECT ); //phpcs:ignore
+		$media_result = $wpdb->get_results( $wpdb->prepare( "SELECT m.attachment_id AS ID,m.user_id,m.title,m.album_id,m.type,m.activity_id,m.id AS media_id from $media_table AS m LEFT JOIN $albums_table AS a ON m.album_id = a.id WHERE a.title = %s AND a.privacy = %s AND m.type = %s ORDER BY m.attachment_id DESC LIMIT 15 OFFSET %d",  $topic, 'public', $type, $offset_number ) , OBJECT ); //phpcs:ignore
 
 		if ( ! empty( $media_result ) && ! is_wp_error( $media_result ) ) {
 
@@ -504,7 +528,7 @@ class Content_Topics_Hashcode_Public {
 			$topic_content = $this->obliby_get_topic_media( $topic_data['title'], 'video', $new_offset );
 		}
 
-		if ( 'pictures' === $type ) {
+		if ( 'photos' === $type ) {
 			$topic_content = $this->obliby_get_topic_media( $topic_data['title'], 'photo', $new_offset );
 		}
 
@@ -546,5 +570,87 @@ class Content_Topics_Hashcode_Public {
 		}
 
 		return $template;
+	}
+
+	/**
+	 * Topic add content button data.
+	 *
+	 * @param    array  $btn_data .
+	 * @param    string $active_filter .
+	 * @param    array  $topic_filters .
+	 * @param    array  $topic_data .
+	 * @since    1.0.0
+	 */
+	public function obliby_topic_add_content_btn( $btn_data, $active_filter, $topic_filters, $topic_data ) {
+
+		if ( empty( $active_filter ) ) {
+			return $btn_data;
+		}
+
+		if ( empty( $topic_filters ) ) {
+			return $btn_data;
+		}
+
+		if ( empty( $topic_data ) ) {
+			return $btn_data;
+		}
+
+		$item_key = array_search( $active_filter, array_column( $topic_filters, 'slug' ), true );
+		$user_id  = get_current_user_id();
+
+		if ( false === $item_key ) {
+			return $btn_data;
+		}
+
+		$btn_url  = '';
+		$btn_text = sprintf( '%s %s', __( 'Add New', 'content-topics-hashcode' ), $topic_filters[ $item_key ]['single'] );
+
+		if ( 'posts' === $active_filter ) {
+
+			$buddyboss_plugin_options = get_option( 'buddyboss_sap_plugin_options' );
+
+			if ( ! empty( $buddyboss_plugin_options ) && isset( $buddyboss_plugin_options['create-new-post'] ) ) {
+				$btn_url = get_permalink( $buddyboss_plugin_options['create-new-post'] );
+			}
+
+			if ( ! empty( $btn_url ) ) {
+				$category     = get_category_by_slug( $topic_data['slug'] );
+				$obliby_nonce = wp_create_nonce( 'obliby_nonce' );
+
+				if ( ! empty( $category ) && ! is_wp_error( $category ) ) {
+					$btn_url = sprintf( '%s?category=%s&nonce=%s', $btn_url, $category->term_id, $obliby_nonce );
+				}
+			}
+		} else {
+
+			$filter_slug = $topic_filters[ $item_key ]['slug'];
+
+			if ( 'videos' === $filter_slug ) {
+				$filter_slug = 'photos';
+			}
+
+			$profile_url = bbp_get_user_profile_url( $user_id );
+			$btn_url     = sprintf( '%s%s', $profile_url, $filter_slug );
+
+			if ( 'photos' === $active_filter || 'videos' === $active_filter ) {
+
+				global $wpdb;
+				$albums_table = $wpdb->prefix . 'bp_media_albums';
+
+				$media_result = $wpdb->get_results( $wpdb->prepare( "SELECT id FROM $albums_table WHERE user_id = %d AND title = %s",  $user_id, $topic_data['title'] ) , OBJECT ); //phpcs:ignore
+
+				if ( ! empty( $media_result ) && ! is_wp_error( $media_result ) ) {
+					$album_id = $media_result[0]->id;
+					$btn_url  = sprintf( '%s/albums/%s/', $btn_url, $album_id );
+				}
+			}
+		}
+
+		$btn_data = array(
+			'btn_url'  => $btn_url,
+			'btn_text' => $btn_text,
+		);
+
+		return $btn_data;
 	}
 }

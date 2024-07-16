@@ -20,7 +20,8 @@
 .bellows-menu-item-object-obliby_topics.bellows-current-menu-item a {
     background: #00000018 !important;
 }
-.topic-content-outer {
+.topic-content-outer,
+.topic-filters-inner {
     max-width: 2180px;
 }
 .topic-item-author {
@@ -48,6 +49,14 @@ button.load-more-icon .bb-icon-l {
 
 .title-icon-img {
   max-width: 60px;
+}
+
+.content-btn-wrap a:hover,
+.content-btn-wrap a:focus {
+  color: #fff;
+}
+.content-btn-wrap a i {
+  font-size: 20px;
 }
 
 .spinner-grow,

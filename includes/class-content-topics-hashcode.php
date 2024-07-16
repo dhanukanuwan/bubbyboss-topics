@@ -1,5 +1,4 @@
 <?php
-
 /**
  * The file that defines the core plugin class
  *
@@ -78,7 +77,6 @@ class Content_Topics_Hashcode {
 		$this->set_locale();
 		$this->define_admin_hooks();
 		$this->define_public_hooks();
-
 	}
 
 	/**
@@ -103,27 +101,26 @@ class Content_Topics_Hashcode {
 		 * The class responsible for orchestrating the actions and filters of the
 		 * core plugin.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-content-topics-hashcode-loader.php';
+		require_once plugin_dir_path( __DIR__ ) . 'includes/class-content-topics-hashcode-loader.php';
 
 		/**
 		 * The class responsible for defining internationalization functionality
 		 * of the plugin.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-content-topics-hashcode-i18n.php';
+		require_once plugin_dir_path( __DIR__ ) . 'includes/class-content-topics-hashcode-i18n.php';
 
 		/**
 		 * The class responsible for defining all actions that occur in the admin area.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-content-topics-hashcode-admin.php';
+		require_once plugin_dir_path( __DIR__ ) . 'admin/class-content-topics-hashcode-admin.php';
 
 		/**
 		 * The class responsible for defining all actions that occur in the public-facing
 		 * side of the site.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-content-topics-hashcode-public.php';
+		require_once plugin_dir_path( __DIR__ ) . 'public/class-content-topics-hashcode-public.php';
 
 		$this->loader = new Content_Topics_Hashcode_Loader();
-
 	}
 
 	/**
@@ -140,7 +137,6 @@ class Content_Topics_Hashcode {
 		$plugin_i18n = new Content_Topics_Hashcode_i18n();
 
 		$this->loader->add_action( 'plugins_loaded', $plugin_i18n, 'load_plugin_textdomain' );
-
 	}
 
 	/**
@@ -159,7 +155,6 @@ class Content_Topics_Hashcode {
 		$this->loader->add_action( 'acf/include_fields', $plugin_admin, 'obliby_acf_field_groups' );
 
 		$this->loader->add_filter( 'obliby_topic_content_filters', $plugin_admin, 'obliby_default_topic_content_filters', 10, 2 );
-
 	}
 
 	/**
@@ -178,7 +173,7 @@ class Content_Topics_Hashcode {
 
 		$this->loader->add_filter( 'obliby_topic_content_data', $plugin_public, 'obliby_topic_content_data', 10, 3 );
 		$this->loader->add_filter( 'single_template', $plugin_public, 'obliby_topic_post_type_single_template', 10, 1 );
-
+		$this->loader->add_filter( 'obliby_topic_add_content_btn_data', $plugin_public, 'obliby_topic_add_content_btn', 10, 4 );
 	}
 
 	/**
@@ -220,5 +215,4 @@ class Content_Topics_Hashcode {
 	public function get_version() {
 		return $this->version;
 	}
-
 }

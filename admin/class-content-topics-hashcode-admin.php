@@ -148,21 +148,25 @@ class Content_Topics_Hashcode_Admin {
 			array(
 				'slug'    => 'posts',
 				'name'    => __( 'Posts', 'content-topics-hashcode' ),
+				'single'  => __( 'Post', 'content-topics-hashcode' ),
 				'classes' => '',
 			),
 			array(
-				'slug'    => 'pictures',
-				'name'    => __( 'Pictures', 'content-topics-hashcode' ),
+				'slug'    => 'photos',
+				'name'    => __( 'Photos', 'content-topics-hashcode' ),
+				'single'  => __( 'Photo', 'content-topics-hashcode' ),
 				'classes' => '',
 			),
 			array(
 				'slug'    => 'videos',
 				'name'    => __( 'Videos', 'content-topics-hashcode' ),
+				'single'  => __( 'Video', 'content-topics-hashcode' ),
 				'classes' => '',
 			),
 			array(
 				'slug'    => 'courses',
 				'name'    => __( 'Courses', 'content-topics-hashcode' ),
+				'single'  => __( 'Course', 'content-topics-hashcode' ),
 				'classes' => '',
 			),
 		);
