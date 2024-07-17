@@ -153,6 +153,8 @@ class Content_Topics_Hashcode {
 		$this->loader->add_action( 'init', $plugin_admin, 'obliby_content_topics_post_type' );
 		$this->loader->add_action( 'init', $plugin_admin, 'obliby_topic_content_filter_rewrite_tags', 10, 0 );
 		$this->loader->add_action( 'acf/include_fields', $plugin_admin, 'obliby_acf_field_groups' );
+		$this->loader->add_action( 'save_post_obliby_topics', $plugin_admin, 'obliby_create_new_categories_on_save_topic', 20, 2 );
+		$this->loader->add_action( 'rest_api_init', $plugin_admin, 'obliby_new_topic_user_media_album_endpoint' );
 
 		$this->loader->add_filter( 'obliby_topic_content_filters', $plugin_admin, 'obliby_default_topic_content_filters', 10, 2 );
 	}

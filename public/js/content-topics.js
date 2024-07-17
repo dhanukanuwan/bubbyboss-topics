@@ -6,6 +6,7 @@
 
           Obliby.loadMoreButton();
 		  Obliby.infinityScroll();
+		  Obliby.createNewUserAlbum();
 
         },
 
@@ -90,6 +91,53 @@
 				} 
 
 			} );
+
+		},
+
+		createNewUserAlbum: () => {
+			
+			jQuery( '.content-btn.no-album' ).on( 'click', async ( event ) => {
+
+				event.preventDefault();
+
+				if ( jQuery( '.content-btn.no-album' ).hasClass( 'loading' ) ) {
+					return;
+				}
+
+				const topicTitle = jQuery( '#topic-title' ).text();
+				let btnLink = jQuery( '.content-btn.no-album' ).attr( 'href' );
+
+				jQuery( '.content-btn.no-album' ).addClass( 'loading' );
+				const loadingIcon = '<div class="spinner-border text-white my-1 ms-1 spinner-border-sm" role="status"></div>';
+
+				jQuery( '.content-btn.no-album' ).append( loadingIcon );
+
+				let requestData = new FormData();
+				requestData.append( 'topic_name', topicTitle );
+
+				const response = await fetch(
+					`${obliby_js_data.rest_root}oblibytopics/v1/newtopicalbum/`,
+					{
+						method: "POST",
+						headers: {
+							"X-WP-Nonce": obliby_js_data.rest_nonce
+						},
+						body: requestData
+					}
+				);
+				const albumResponse = await response.json();
+
+				if ( albumResponse &&  albumResponse.success === true ) {
+					
+					btnLink = `${btnLink}/albums/${albumResponse.data.album_id}/`;
+					jQuery( '.content-btn.no-album' ).attr( 'href', btnLink );
+
+				}
+
+				window.location.replace( btnLink );
+
+
+			});
 
 		}
         

@@ -63,7 +63,7 @@ get_header( 'topic' );
 						</div>
 					<?php endif; ?>
 
-					<h1 class="mb-0"><?php the_title(); ?></h1>
+					<h1 id="topic-title" class="mb-0"><?php the_title(); ?></h1>
 				</div>
 
 				<?php
@@ -97,7 +97,7 @@ get_header( 'topic' );
 							<div class="content-btn-wrap mb-3 me-3">
 								
 								<?php if ( ! empty( $content_btn_data ) ) : ?>
-									<a href="<?php echo esc_url( $content_btn_data['btn_url'] ); ?>" class="pe-4 button">
+									<a href="<?php echo esc_url( $content_btn_data['btn_url'] ); ?>" class="pe-4 button content-btn <?php echo esc_attr( $content_btn_data['btn_classes'] ); ?>">
 										<i class="bb-icon-file-plus bb-icon-l"></i>
 										<span class="ms-2"><?php echo esc_html( $content_btn_data['btn_text'] ); ?></span>
 									</a>

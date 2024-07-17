@@ -211,4 +211,127 @@ class Content_Topics_Hashcode_Admin {
 			}
 		}
 	}
+
+	/**
+	 * Add new post and course categories when creating a new topic.
+	 *
+	 * @since 1.0.0
+	 * @param  array   $post_id .
+	 * @param  WP_Post $post .
+	 */
+	public function obliby_create_new_categories_on_save_topic( $post_id, $post ) {
+
+		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+			return;
+		}
+
+		// bail out if this is not an event item.
+		if ( 'obliby_topics' !== $post->post_type ) {
+			return;
+		}
+
+		$post_category   = get_term_by( 'name', $post->post_title, 'category' );
+		$course_category = get_term_by( 'name', $post->post_title, 'course-category' );
+
+		if ( empty( $post_category ) ) {
+			wp_insert_term( $post->post_title, 'category' );
+		}
+
+		if ( empty( $course_category ) ) {
+			wp_insert_term( $post->post_title, 'course-category' );
+		}
+	}
+
+	/**
+	 * Add new user media album endpoint.
+	 *
+	 * @since    1.0.0
+	 */
+	public function obliby_new_topic_user_media_album_endpoint() {
+		register_rest_route(
+			'oblibytopics/v1',
+			'/newtopicalbum',
+			array(
+				array(
+					'methods'             => WP_REST_Server::CREATABLE,
+					'callback'            => array( $this, 'obliby_new_topic_user_media_album_endpoint_callback' ),
+					'args'                => array(
+						'topic_name' => array(
+							'required' => true,
+							'type'     => 'string',
+						),
+					),
+					'permission_callback' => array( $this, 'obliby_rest_api_user_permissions' ),
+				),
+			)
+		);
+	}
+
+	/**
+	 * Add new organization callback.
+	 *
+	 * @param    array $request request array.
+	 * @since    1.0.0
+	 */
+	public function obliby_new_topic_user_media_album_endpoint_callback( $request ) {
+
+		$topic_name = sanitize_text_field( $request->get_param( 'topic_name' ) );
+
+		$data    = array();
+		$success = false;
+		$message = '';
+
+		if ( ! empty( $topic_name ) ) {
+
+			$user_id = get_current_user_id();
+
+			global $wpdb;
+			$albums_table = $wpdb->prefix . 'bp_media_albums';
+
+			$inserted = $wpdb->insert( //phpcs:ignore
+				$albums_table,
+				array(
+					'user_id'  => $user_id,
+					'group_id' => 0,
+					'title'    => $topic_name,
+					'privacy'  => 'public',
+				),
+				array(
+					'%d',
+					'%d',
+					'%s',
+					'%s',
+				)
+			);
+
+			if ( false !== $inserted ) {
+
+				$success = true;
+
+				if ( isset( $wpdb->insert_id ) ) {
+					$data['album_id'] = $wpdb->insert_id;
+				}
+			}
+		}
+
+		$response = rest_ensure_response(
+			array(
+				'data'    => $data,
+				'success' => $success,
+				'message' => $message,
+			)
+		);
+
+		return $response;
+	}
+
+	/**
+	 * Check user permissions.
+	 *
+	 * @param    array $request request array.
+	 * @since    1.0.0
+	 */
+	public function obliby_rest_api_user_permissions( $request ) { //phpcs:ignore
+		return current_user_can( 'edit_posts' );
+	}
 }
