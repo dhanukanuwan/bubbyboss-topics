@@ -73,27 +73,33 @@ class Content_Topics_Hashcode_Public {
 
 		}
 
+		$category_page_ids        = array();
 		$buddyboss_plugin_options = get_option( 'buddyboss_sap_plugin_options' );
 
 		if ( ! empty( $buddyboss_plugin_options ) && isset( $buddyboss_plugin_options['create-new-post'] ) ) {
 
-			$new_post_page_id = $buddyboss_plugin_options['create-new-post'];
+			$new_post_page_id    = $buddyboss_plugin_options['create-new-post'];
+			$category_page_ids[] = (int) $new_post_page_id;
+		}
 
-			if ( is_page( $new_post_page_id ) ) {
+		if ( ! empty( $category_page_ids ) ) {
+
+			if ( is_page( $category_page_ids ) ) {
+
+				wp_enqueue_script( 'obliby-post-js', plugin_dir_url( __FILE__ ) . 'js/new-post.js', array( 'jquery' ), filemtime( plugin_dir_path( __FILE__ ) . 'js/new-post.js' ), true );
+
+				$ajax_object = array();
 
 				if ( isset( $_GET['nonce'] ) && isset( $_GET['category'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['nonce'] ) ), 'obliby_nonce' ) ) {
 
 					$category_id = sanitize_text_field( wp_unslash( $_GET['category'] ) );
-
-					wp_enqueue_script( 'obliby-post-js', plugin_dir_url( __FILE__ ) . 'js/new-post.js', array( 'jquery' ), filemtime( plugin_dir_path( __FILE__ ) . 'js/new-post.js' ), true );
-
 					$ajax_object = array(
 						'categoryID' => $category_id,
 					);
 
-					wp_localize_script( 'obliby-post-js', 'oblibyAjax', $ajax_object );
-
 				}
+
+				wp_localize_script( 'obliby-post-js', 'oblibyAjax', $ajax_object );
 			}
 		}
 	}
@@ -630,6 +636,16 @@ class Content_Topics_Hashcode_Public {
 					$btn_url = sprintf( '%s?category=%s&nonce=%s', $btn_url, $category->term_id, $obliby_nonce );
 				}
 			}
+		} elseif ( 'courses' === $active_filter ) {
+
+			$tutor_options = get_option( 'tutor_option' );
+
+			if ( ! empty( $tutor_options ) && isset( $tutor_options['tutor_dashboard_page_id'] ) ) {
+				$btn_url = get_permalink( $tutor_options['tutor_dashboard_page_id'] );
+			}
+
+			$btn_classes = 'new-course-btn';
+
 		} else {
 
 			$filter_slug = $topic_filters[ $item_key ]['slug'];
@@ -664,5 +680,24 @@ class Content_Topics_Hashcode_Public {
 		);
 
 		return $btn_data;
+	}
+
+	/**
+	 * Redirect topic pages to login page if the user is not logged in.
+	 *
+	 * @since    1.0.0
+	 */
+	public function obliby_redirect_topic_pages() {
+
+		if ( is_user_logged_in() ) {
+			return;
+		}
+
+		if ( ! is_singular( 'obliby_topics' ) ) {
+			return;
+		}
+
+		wp_safe_redirect( esc_url( home_url( '/wp-login.php' ) ) );
+		exit;
 	}
 }

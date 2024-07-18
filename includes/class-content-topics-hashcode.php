@@ -155,6 +155,7 @@ class Content_Topics_Hashcode {
 		$this->loader->add_action( 'acf/include_fields', $plugin_admin, 'obliby_acf_field_groups' );
 		$this->loader->add_action( 'save_post_obliby_topics', $plugin_admin, 'obliby_create_new_categories_on_save_topic', 20, 2 );
 		$this->loader->add_action( 'rest_api_init', $plugin_admin, 'obliby_new_topic_user_media_album_endpoint' );
+		$this->loader->add_action( 'rest_api_init', $plugin_admin, 'obliby_create_new_draft_course_endpoint' );
 
 		$this->loader->add_filter( 'obliby_topic_content_filters', $plugin_admin, 'obliby_default_topic_content_filters', 10, 2 );
 	}
@@ -172,6 +173,7 @@ class Content_Topics_Hashcode {
 
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'obliby_enqueue_scripts' );
 		$this->loader->add_action( 'rest_api_init', $plugin_public, 'obliby_topic_pagination_endpoint' );
+		$this->loader->add_action( 'template_redirect', $plugin_public, 'obliby_redirect_topic_pages' );
 
 		$this->loader->add_filter( 'obliby_topic_content_data', $plugin_public, 'obliby_topic_content_data', 10, 3 );
 		$this->loader->add_filter( 'single_template', $plugin_public, 'obliby_topic_post_type_single_template', 10, 1 );

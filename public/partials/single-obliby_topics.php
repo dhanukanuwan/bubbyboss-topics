@@ -97,7 +97,7 @@ get_header( 'topic' );
 							<div class="content-btn-wrap mb-3 me-3">
 								
 								<?php if ( ! empty( $content_btn_data ) ) : ?>
-									<a href="<?php echo esc_url( $content_btn_data['btn_url'] ); ?>" class="pe-4 button content-btn <?php echo esc_attr( $content_btn_data['btn_classes'] ); ?>">
+									<a href="<?php echo esc_url( $content_btn_data['btn_url'] ); ?>" class="pe-4 button d-flex align-items-center content-btn <?php echo esc_attr( $content_btn_data['btn_classes'] ); ?>" topicSlug="<?php echo esc_attr( $topic_slug ); ?>">
 										<i class="bb-icon-file-plus bb-icon-l"></i>
 										<span class="ms-2"><?php echo esc_html( $content_btn_data['btn_text'] ); ?></span>
 									</a>

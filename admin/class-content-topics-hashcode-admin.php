@@ -326,6 +326,89 @@ class Content_Topics_Hashcode_Admin {
 	}
 
 	/**
+	 * Create new draft course endpoint.
+	 *
+	 * @since    1.0.0
+	 */
+	public function obliby_create_new_draft_course_endpoint() {
+		register_rest_route(
+			'oblibytopics/v1',
+			'/createdraftcourse',
+			array(
+				array(
+					'methods'             => WP_REST_Server::CREATABLE,
+					'callback'            => array( $this, 'obliby_create_new_draft_course_endpoint_callback' ),
+					'args'                => array(
+						'topic_slug' => array(
+							'required' => true,
+							'type'     => 'string',
+						),
+					),
+					'permission_callback' => array( $this, 'obliby_rest_api_user_permissions' ),
+				),
+			)
+		);
+	}
+
+	/**
+	 * Add new organization callback.
+	 *
+	 * @since    1.0.0
+	 * @param    array $request request array.
+	 */
+	public function obliby_create_new_draft_course_endpoint_callback( $request ) {
+
+		$topic_slug = sanitize_text_field( $request->get_param( 'topic_slug' ) );
+
+		$data    = array();
+		$success = false;
+		$message = '';
+
+		$course_category = get_term_by( 'slug', $topic_slug, 'course-category' );
+
+		if ( ! empty( $course_category ) && ! is_wp_error( $course_category ) ) {
+
+			$course_args = array(
+				'post_title'   => __( 'New Course', 'content-topics-hashcode' ),
+				'post_type'    => 'courses',
+				'post_content' => '',
+				'post_status'  => 'draft',
+				'post_author'  => get_current_user_id(),
+			);
+
+			$course_id = wp_insert_post( $course_args );
+
+			if ( ! empty( $course_id ) && ! is_wp_error( $course_id ) ) {
+
+				$course_term = array( (int) $course_category->term_id );
+				wp_set_post_terms( $course_id, $course_term, 'course-category' );
+
+				$tutor_options = get_option( 'tutor_option' );
+
+				if ( ! empty( $tutor_options ) && isset( $tutor_options['tutor_dashboard_page_id'] ) ) {
+					$page_url = get_permalink( $tutor_options['tutor_dashboard_page_id'] );
+					$page_url = sprintf( '%s/create-course/?course_ID=%d', $page_url, $course_id );
+
+					$data['page_url'] = $page_url;
+					$success          = true;
+				}
+
+				$data['course_id'] = $course_id;
+			}
+		}
+
+		$response = rest_ensure_response(
+			array(
+				'data'    => $data,
+				'success' => $success,
+				'message' => $message,
+			)
+		);
+
+		return $response;
+	}
+
+	/**
 	 * Check user permissions.
 	 *
 	 * @param    array $request request array.

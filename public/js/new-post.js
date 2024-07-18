@@ -4,7 +4,7 @@
 	window.OblibyPost = {
         init: () => {
 
-          OblibyPost.setCategory();
+        	OblibyPost.setCategory();
 
         },
 
@@ -30,7 +30,7 @@
 
 		setTimeout(() => {
 			OblibyPost.init();
-		}, "1000");
+		}, '1000' );
         
     });
 

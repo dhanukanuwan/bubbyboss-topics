@@ -7,6 +7,7 @@
           Obliby.loadMoreButton();
 		  Obliby.infinityScroll();
 		  Obliby.createNewUserAlbum();
+		  Obliby.addNewCourseBtn();
 
         },
 
@@ -108,7 +109,7 @@
 				let btnLink = jQuery( '.content-btn.no-album' ).attr( 'href' );
 
 				jQuery( '.content-btn.no-album' ).addClass( 'loading' );
-				const loadingIcon = '<div class="spinner-border text-white my-1 ms-1 spinner-border-sm" role="status"></div>';
+				const loadingIcon = '<div class="spinner-border text-white my-1 ms-2 spinner-border-sm" role="status"></div>';
 
 				jQuery( '.content-btn.no-album' ).append( loadingIcon );
 
@@ -136,6 +137,53 @@
 
 				window.location.replace( btnLink );
 
+
+			});
+
+		},
+
+		addNewCourseBtn: () => {
+
+			jQuery( '.content-btn.new-course-btn' ).on( 'click', async ( event ) => {
+
+				event.preventDefault();
+
+				const courseBtn = jQuery( '.content-btn.new-course-btn' );
+
+				if ( courseBtn.hasClass( 'loading' ) ) {
+					return;
+				}
+
+				courseBtn.addClass( 'loading' );
+				const loadingIcon = '<div class="spinner-border text-white my-1 ms-2 spinner-border-sm" role="status"></div>';
+				const topicSlug = courseBtn.attr( 'topicSlug' );
+				let btnLink = courseBtn.attr( 'href' );
+
+				courseBtn.append( loadingIcon );
+
+				let requestData = new FormData();
+				requestData.append( 'topic_slug', topicSlug );
+
+				const response = await fetch(
+					`${obliby_js_data.rest_root}oblibytopics/v1/createdraftcourse/`,
+					{
+						method: "POST",
+						headers: {
+							"X-WP-Nonce": obliby_js_data.rest_nonce
+						},
+						body: requestData
+					}
+				);
+				const courseResponse = await response.json();
+
+				if ( courseResponse && courseResponse.success === true ) {
+
+					btnLink = courseResponse.data.page_url;
+					courseBtn.attr( 'href', btnLink );
+					
+				}
+
+				window.location.replace( btnLink );
 
 			});
 
