@@ -230,8 +230,8 @@ class Content_Topics_Hashcode_Admin {
 			return;
 		}
 
-		$post_category   = get_term_by( 'name', $post->post_title, 'category' );
-		$course_category = get_term_by( 'name', $post->post_title, 'course-category' );
+		$post_category   = get_term_by( 'slug', $post->post_name, 'category' );
+		$course_category = get_term_by( 'slug', $post->post_name, 'course-category' );
 
 		if ( empty( $post_category ) ) {
 			wp_insert_term( $post->post_title, 'category' );
