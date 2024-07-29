@@ -133,6 +133,7 @@ class Content_Topics_Hashcode_Admin {
 		}
 
 		require_once plugin_dir_path( __DIR__ ) . 'admin/includes/acf/topic-fields.php';
+		require_once plugin_dir_path( __DIR__ ) . 'admin/includes/acf/uploader-notice.php';
 	}
 
 	/**

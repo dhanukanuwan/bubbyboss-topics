@@ -1,0 +1,200 @@
+# Copyright (C) 2024 Dhanuka Gunarathna
+# This file is distributed under the GPL-2.0+.
+msgid ""
+msgstr ""
+"Project-Id-Version: Content Topics 1.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/content-topics-hashcode\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2024-07-24T15:44:54+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.11.0-alpha-402a230\n"
+"X-Domain: content-topics-hashcode\n"
+
+#. Plugin Name of the plugin
+#: content-topics-hashcode.php
+msgid "Content Topics"
+msgstr ""
+
+#. Plugin URI of the plugin
+#: content-topics-hashcode.php
+msgid "https://hashcodeab.se"
+msgstr ""
+
+#. Description of the plugin
+#: content-topics-hashcode.php
+msgid "This plugin creates dynamic content topics and adds content filtering function by content type"
+msgstr ""
+
+#. Author of the plugin
+#: content-topics-hashcode.php
+msgid "Dhanuka Gunarathna"
+msgstr ""
+
+#. Author URI of the plugin
+#: content-topics-hashcode.php
+msgid "https://hashcodeab.se/"
+msgstr ""
+
+#: admin/class-content-topics-hashcode-admin.php:63
+msgctxt "Post Type General Name"
+msgid "Topics"
+msgstr ""
+
+#: admin/class-content-topics-hashcode-admin.php:64
+msgctxt "Post Type Singular Name"
+msgid "Topic"
+msgstr ""
+
+#: admin/class-content-topics-hashcode-admin.php:65
+#: admin/class-content-topics-hashcode-admin.php:66
+msgid "Topics"
+msgstr ""
+
+#: admin/class-content-topics-hashcode-admin.php:67
+msgid "Topic Archives"
+msgstr ""
+
+#: admin/class-content-topics-hashcode-admin.php:68
+msgid "Topic Attributes"
+msgstr ""
+
+#: admin/class-content-topics-hashcode-admin.php:69
+msgid "Parent ItTopicm:"
+msgstr ""
+
+#: admin/class-content-topics-hashcode-admin.php:70
+msgid "All Topics"
+msgstr ""
+
+#: admin/class-content-topics-hashcode-admin.php:71
+msgid "Add New Item"
+msgstr ""
+
+#: admin/class-content-topics-hashcode-admin.php:72
+msgid "Add New Topic"
+msgstr ""
+
+#: admin/class-content-topics-hashcode-admin.php:73
+msgid "New Topic"
+msgstr ""
+
+#: admin/class-content-topics-hashcode-admin.php:74
+msgid "Edit Topic"
+msgstr ""
+
+#: admin/class-content-topics-hashcode-admin.php:75
+msgid "Update Topic"
+msgstr ""
+
+#: admin/class-content-topics-hashcode-admin.php:76
+#: admin/class-content-topics-hashcode-admin.php:77
+msgid "View Topic"
+msgstr ""
+
+#: admin/class-content-topics-hashcode-admin.php:78
+msgid "Search Topic"
+msgstr ""
+
+#: admin/class-content-topics-hashcode-admin.php:79
+msgid "Not found"
+msgstr ""
+
+#: admin/class-content-topics-hashcode-admin.php:80
+msgid "Not found in Trash"
+msgstr ""
+
+#: admin/class-content-topics-hashcode-admin.php:81
+msgid "Featured Image"
+msgstr ""
+
+#: admin/class-content-topics-hashcode-admin.php:82
+msgid "Set featured image"
+msgstr ""
+
+#: admin/class-content-topics-hashcode-admin.php:83
+msgid "Remove featured image"
+msgstr ""
+
+#: admin/class-content-topics-hashcode-admin.php:84
+msgid "Use as featured image"
+msgstr ""
+
+#: admin/class-content-topics-hashcode-admin.php:85
+msgid "Insert into item"
+msgstr ""
+
+#: admin/class-content-topics-hashcode-admin.php:86
+msgid "Uploaded to this item"
+msgstr ""
+
+#: admin/class-content-topics-hashcode-admin.php:87
+msgid "Items list"
+msgstr ""
+
+#: admin/class-content-topics-hashcode-admin.php:88
+msgid "Items list navigation"
+msgstr ""
+
+#: admin/class-content-topics-hashcode-admin.php:89
+msgid "Filter items list"
+msgstr ""
+
+#: admin/class-content-topics-hashcode-admin.php:100
+msgid "Topic"
+msgstr ""
+
+#: admin/class-content-topics-hashcode-admin.php:101
+msgid "Obliby Content Topic"
+msgstr ""
+
+#: admin/class-content-topics-hashcode-admin.php:150
+msgid "Posts"
+msgstr ""
+
+#: admin/class-content-topics-hashcode-admin.php:151
+msgid "Post"
+msgstr ""
+
+#: admin/class-content-topics-hashcode-admin.php:156
+msgid "Photos"
+msgstr ""
+
+#: admin/class-content-topics-hashcode-admin.php:157
+msgid "Photo"
+msgstr ""
+
+#: admin/class-content-topics-hashcode-admin.php:162
+msgid "Videos"
+msgstr ""
+
+#: admin/class-content-topics-hashcode-admin.php:163
+msgid "Video"
+msgstr ""
+
+#: admin/class-content-topics-hashcode-admin.php:168
+msgid "Courses"
+msgstr ""
+
+#: admin/class-content-topics-hashcode-admin.php:169
+msgid "Course"
+msgstr ""
+
+#: admin/class-content-topics-hashcode-admin.php:372
+msgid "New Course"
+msgstr ""
+
+#: public/class-content-topics-hashcode-public.php:237
+msgid "post"
+msgstr ""
+
+#: public/class-content-topics-hashcode-public.php:283
+msgid "course"
+msgstr ""
+
+#: public/class-content-topics-hashcode-public.php:620
+msgid "Add New"
+msgstr ""

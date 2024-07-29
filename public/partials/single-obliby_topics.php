@@ -51,7 +51,7 @@ get_header( 'topic' );
 	<div class="container-fluid">
 		<div class="row">
 			<div class="col-12">
-				<div class="d-flex pt-4 ps-2 ps-lg-4 align-items-center">
+				<div class="d-flex pt-4 ps-lg-3 align-items-center justify-content-center justify-content-lg-start">
 
 					<?php if ( 'buddyboss' === $topic_icon_type && ! empty( $topic_icon ) ) : ?>
 						<span class="pe-2 title-icon"><i class="bb-icon-l buddyboss bb-icon-<?php echo esc_attr( $topic_icon ); ?>" aria-hidden="true"></i></span>
@@ -72,8 +72,8 @@ get_header( 'topic' );
 			?>
 				
 				<?php if ( ! empty( $topic_heading ) ) : ?>
-					<div class="topic-heading-wrap mt-3 ps-2 ps-lg-4">
-						<h3><?php echo wp_kses_post( $topic_heading ); ?></h3>
+					<div class="topic-heading-wrap mt-3 ps-lg-3 text-center text-lg-start">
+						<h3 class="mb-0 mb-lg-3"><?php echo wp_kses_post( $topic_heading ); ?></h3>
 					</div>
 				<?php endif; ?>
 
@@ -81,23 +81,23 @@ get_header( 'topic' );
 		</div>
 		
 		<div class="row">
-			<div class="col-12 mt-4">
+			<div class="col-12 mt-lg-4">
 
 				<?php if ( ! empty( $topic_filters ) ) : ?>
-					<div class="topic-filters d-flex">
-						<div class="topic-filters-inner d-flex w-100">
-							<div class="ps-2 ps-lg-4 d-flex flex-grow-1">
+					<div class="topic-filters d-flex w-100 <?php echo $active_filter ? 'pb-lg-3' : 'pb-lg-4'; ?>">
+						<div class="topic-filters-inner row align-items-center flex-grow-1">
+							<div class="ps-2 ps-lg-3 col-12 col-lg order-1 order-lg-0">
 								
-								<a href="<?php echo esc_url( $topic_link ); ?>" class="px-3 pb-2 <?php echo $active_filter ? '' : 'active'; ?>"><?php echo esc_html_e( 'All', 'buddyboss' ); ?></a>
+								<a href="<?php echo esc_url( $topic_link ); ?>" class="px-2 px-lg-3 all pb-2 <?php echo $active_filter ? '' : 'active'; ?>"><?php echo esc_html_e( 'All', 'buddyboss' ); ?></a>
 
 								<?php foreach ( $topic_filters as $topic_filter ) : ?>
-									<a href="<?php echo esc_url( $topic_link . $topic_filter['slug'] ); ?>" class="px-3 pb-2 <?php echo esc_attr( $topic_filter['classes'] ); ?>"><?php echo esc_html( $topic_filter['name'] ); ?></a>
+									<a href="<?php echo esc_url( $topic_link . $topic_filter['slug'] ); ?>" class="px-2 px-lg-3 pb-2 <?php echo esc_attr( $topic_filter['classes'] ); ?>"><?php echo esc_html( $topic_filter['name'] ); ?></a>
 								<?php endforeach; ?>
 							</div>
-							<div class="content-btn-wrap mb-3 me-3">
+							<div class="content-btn-wrap mt-3 mt-lg-0 mb-3 mb-lg-0 me-lg-3 col-12 col-lg-3 d-flex justify-content-center justify-content-lg-end order-0 order-lg-1">
 								
 								<?php if ( ! empty( $content_btn_data ) ) : ?>
-									<a href="<?php echo esc_url( $content_btn_data['btn_url'] ); ?>" class="pe-4 button d-flex align-items-center content-btn <?php echo esc_attr( $content_btn_data['btn_classes'] ); ?>" topicSlug="<?php echo esc_attr( $topic_slug ); ?>">
+									<a href="<?php echo esc_url( $content_btn_data['btn_url'] ); ?>" class="py-2 px-3 button d-flex align-items-center content-btn <?php echo esc_attr( $content_btn_data['btn_classes'] ); ?>" topicSlug="<?php echo esc_attr( $topic_slug ); ?>">
 										<i class="bb-icon-file-plus bb-icon-l"></i>
 										<span class="ms-2"><?php echo esc_html( $content_btn_data['btn_text'] ); ?></span>
 									</a>
@@ -111,8 +111,8 @@ get_header( 'topic' );
 		</div>
 
 		<?php if ( ! empty( $topic_content ) ) : ?>
-			<div class="topic-content-outer ps-2 ps-lg-4 mt-4 mb-5">
-				<div class="row row-cols-xxl-5 g-2" id="topic-content-row">
+			<div class="topic-content-outer ps-2 ps-lg-3 mt-4 mb-5">
+				<div class="row row-cols-xxl-5 g-3" id="topic-content-row">
 					
 					<?php foreach ( $topic_content as $topic_item ) : ?>
 
@@ -143,7 +143,7 @@ get_header( 'topic' );
 
 			<div class="row">
 				<div class="col-12 pt-4">
-					<h3><?php esc_html_e( 'No content found.', 'buddyboss' ); ?></h3>
+					<h3><?php esc_html_e( 'No content found.', 'content-topics-hashcode' ); ?></h3>
 				</div>
 			</div>
 						

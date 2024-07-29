@@ -73,6 +73,21 @@ class Content_Topics_Hashcode_Public {
 
 		}
 
+		wp_enqueue_script( 'obliby-upload-notice-js', plugin_dir_url( __FILE__ ) . 'js/upload-notice.js', array( 'jquery' ), filemtime( plugin_dir_path( __FILE__ ) . 'js/upload-notice.js' ), true );
+
+		$upload_notice_data = array();
+		$bp_pages           = get_option( 'bp-pages' );
+
+		if ( ! empty( $bp_pages ) && isset( $bp_pages['media'] ) ) {
+			$notice_content = get_field( 'uploader_notice', $bp_pages['media'] );
+
+			if ( ! empty( $notice_content ) ) {
+				$upload_notice_data['notice_content'] = wp_kses_post( $notice_content );
+			}
+		}
+
+		wp_localize_script( 'obliby-upload-notice-js', 'notice_data', $upload_notice_data );
+
 		$category_page_ids        = array();
 		$buddyboss_plugin_options = get_option( 'buddyboss_sap_plugin_options' );
 
