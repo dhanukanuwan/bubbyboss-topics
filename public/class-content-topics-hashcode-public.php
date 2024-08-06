@@ -249,7 +249,7 @@ class Content_Topics_Hashcode_Public {
 
 		if ( ! empty( $post_ids ) && ! is_wp_error( $post_ids ) ) {
 			foreach ( $post_ids as $post_id ) {
-				$post_data     = $this->obliby_get_post_data( $post_id, __( 'post', 'content-topics-hashcode' ) );
+				$post_data     = $this->obliby_get_post_data( $post_id, 'post' );
 				$topic_posts[] = $post_data;
 			}
 		}
@@ -295,7 +295,7 @@ class Content_Topics_Hashcode_Public {
 
 		if ( ! empty( $post_ids ) && ! is_wp_error( $post_ids ) ) {
 			foreach ( $post_ids as $post_id ) {
-				$post_data       = $this->obliby_get_post_data( $post_id, __( 'course', 'content-topics-hashcode' ) );
+				$post_data       = $this->obliby_get_post_data( $post_id, 'course' );
 				$topic_courses[] = $post_data;
 			}
 		}
@@ -388,6 +388,16 @@ class Content_Topics_Hashcode_Public {
 
 		if ( ! empty( $type ) ) {
 			$post_data['type'] = $type;
+
+			$type_translated = '';
+
+			if ( 'post' === $type ) {
+				$type_translated = __( 'post', 'content-topics-hashcode' );
+			} elseif ( 'course' === $type ) {
+				$type_translated = __( 'course', 'content-topics-hashcode' );
+			}
+
+			$post_data['type_translated'] = $type_translated;
 		}
 
 		return $post_data;
@@ -438,16 +448,18 @@ class Content_Topics_Hashcode_Public {
 	 */
 	private function obliby_get_topic_media_content( $media_item, $type ) {
 
-		$media_url      = '';
-		$author_name    = get_the_author_meta( 'display_name', $media_item->user_id );
-		$author_profile = bbp_get_user_profile_url( $media_item->user_id );
-		$post_date      = get_the_date( 'F j, Y', $media_item->ID );
-		$video_data     = array();
-		$author_avatar  = get_avatar_url( $media_item->user_id );
-		$time_diff      = human_time_diff( get_the_date( 'U', $media_item->ID ) );
+		$media_url       = '';
+		$author_name     = get_the_author_meta( 'display_name', $media_item->user_id );
+		$author_profile  = bbp_get_user_profile_url( $media_item->user_id );
+		$post_date       = get_the_date( 'F j, Y', $media_item->ID );
+		$video_data      = array();
+		$author_avatar   = get_avatar_url( $media_item->user_id );
+		$time_diff       = human_time_diff( get_the_date( 'U', $media_item->ID ) );
+		$type_translated = '';
 
 		if ( 'video' === $type ) {
-			$video_data = bp_video_get_activity_video( $media_item->activity_id );
+			$video_data      = bp_video_get_activity_video( $media_item->activity_id );
+			$type_translated = __( 'video', 'content-topics-hashcode' );
 		}
 
 		$activity_url = bp_activity_get_permalink( $media_item->activity_id );
@@ -464,21 +476,24 @@ class Content_Topics_Hashcode_Public {
 			if ( ! empty( $media_template ) && isset( $media_template->medias ) ) {
 				$media_url = apply_filters( 'bp_get_media_attachment_image', $media_template->medias[0]->attachment_data->media_theatre_popup );
 			}
+
+			$type_translated = __( 'photo', 'content-topics-hashcode' );
 		}
 
 		$media_data = array(
-			'media_url'      => $media_url,
-			'author_name'    => $author_name,
-			'author_profile' => $author_profile,
-			'post_date'      => $post_date,
-			'type'           => $type,
-			'video_data'     => $video_data,
-			'activity_id'    => $media_item->activity_id,
-			'attachment_id'  => $media_item->ID,
-			'album_id'       => $media_item->album_id,
-			'author_avatar'  => $author_avatar,
-			'time_diff'      => $time_diff,
-			'activity_url'   => $activity_url,
+			'media_url'       => $media_url,
+			'author_name'     => $author_name,
+			'author_profile'  => $author_profile,
+			'post_date'       => $post_date,
+			'type'            => $type,
+			'video_data'      => $video_data,
+			'activity_id'     => $media_item->activity_id,
+			'attachment_id'   => $media_item->ID,
+			'album_id'        => $media_item->album_id,
+			'author_avatar'   => $author_avatar,
+			'time_diff'       => $time_diff,
+			'activity_url'    => $activity_url,
+			'type_translated' => $type_translated,
 		);
 
 		return $media_data;

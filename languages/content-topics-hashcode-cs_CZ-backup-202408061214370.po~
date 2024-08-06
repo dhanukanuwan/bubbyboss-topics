@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Content Topics\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-07-24 15:48+0000\n"
-"PO-Revision-Date: 2024-08-06 12:14+0000\n"
+"PO-Revision-Date: 2024-07-24 15:50+0000\n"
 "Last-Translator: Robert Gwuzd\n"
 "Language-Team: Czech\n"
 "Language: cs_CZ\n"
@@ -16,12 +16,7 @@ msgstr ""
 "X-Loco-Version: 2.6.10; wp-6.5.4\n"
 "X-Domain: content-topics-hashcode"
 
-#. translators: %s: date format
-#: public/partials/template-parts/topic-post.php:52
-msgid "%s ago"
-msgstr "před %s"
-
-#: public/class-content-topics-hashcode-public.php:650
+#: public/class-content-topics-hashcode-public.php:620
 msgid "Add New"
 msgstr ""
 
@@ -33,35 +28,27 @@ msgstr ""
 msgid "Add New Topic"
 msgstr ""
 
-#: public/partials/template-parts/topic-course.php:51
-#: public/partials/template-parts/topic-photo.php:48
-#: public/partials/template-parts/topic-video.php:46
-msgid "ago"
-msgstr ""
-
 #: admin/class-content-topics-hashcode-admin.php:70
 msgid "All Topics"
 msgstr ""
 
-#. Plugin Name of the plugin
-#: content-topics-hashcode.php
+#. Name of the plugin
 msgid "Content Topics"
 msgstr ""
 
-#: admin/class-content-topics-hashcode-admin.php:170
+#: admin/class-content-topics-hashcode-admin.php:169
 msgid "Course"
 msgstr ""
 
-#: public/class-content-topics-hashcode-public.php:397
+#: public/class-content-topics-hashcode-public.php:283
 msgid "course"
 msgstr ""
 
-#: admin/class-content-topics-hashcode-admin.php:169
+#: admin/class-content-topics-hashcode-admin.php:168
 msgid "Courses"
 msgstr ""
 
 #. Author of the plugin
-#: content-topics-hashcode.php
 msgid "Dhanuka Gunarathna"
 msgstr ""
 
@@ -77,13 +64,11 @@ msgstr ""
 msgid "Filter items list"
 msgstr ""
 
-#. Plugin URI of the plugin
-#: content-topics-hashcode.php
+#. URI of the plugin
 msgid "https://hashcodeab.se"
 msgstr ""
 
 #. Author URI of the plugin
-#: content-topics-hashcode.php
 msgid "https://hashcodeab.se/"
 msgstr ""
 
@@ -99,16 +84,12 @@ msgstr ""
 msgid "Items list navigation"
 msgstr ""
 
-#: admin/class-content-topics-hashcode-admin.php:373
+#: admin/class-content-topics-hashcode-admin.php:372
 msgid "New Course"
 msgstr ""
 
 #: admin/class-content-topics-hashcode-admin.php:73
 msgid "New Topic"
-msgstr ""
-
-#: public/partials/single-obliby_topics.php:146
-msgid "No content found."
 msgstr ""
 
 #: admin/class-content-topics-hashcode-admin.php:79
@@ -127,23 +108,19 @@ msgstr ""
 msgid "Parent ItTopicm:"
 msgstr ""
 
-#: admin/class-content-topics-hashcode-admin.php:158
+#: admin/class-content-topics-hashcode-admin.php:157
 msgid "Photo"
 msgstr ""
 
-#: public/class-content-topics-hashcode-public.php:480
-msgid "photo"
-msgstr ""
-
-#: admin/class-content-topics-hashcode-admin.php:157
+#: admin/class-content-topics-hashcode-admin.php:156
 msgid "Photos"
 msgstr ""
 
-#: admin/class-content-topics-hashcode-admin.php:152
+#: admin/class-content-topics-hashcode-admin.php:151
 msgid "Post"
 msgstr ""
 
-#: public/class-content-topics-hashcode-public.php:395
+#: public/class-content-topics-hashcode-public.php:237
 msgid "post"
 msgstr ""
 
@@ -157,7 +134,7 @@ msgctxt "Post Type Singular Name"
 msgid "Topic"
 msgstr ""
 
-#: admin/class-content-topics-hashcode-admin.php:151
+#: admin/class-content-topics-hashcode-admin.php:150
 msgid "Posts"
 msgstr ""
 
@@ -174,7 +151,6 @@ msgid "Set featured image"
 msgstr ""
 
 #. Description of the plugin
-#: content-topics-hashcode.php
 msgid ""
 "This plugin creates dynamic content topics and adds content filtering "
 "function by content type"
@@ -209,15 +185,11 @@ msgstr ""
 msgid "Use as featured image"
 msgstr ""
 
-#: admin/class-content-topics-hashcode-admin.php:164
+#: admin/class-content-topics-hashcode-admin.php:163
 msgid "Video"
 msgstr ""
 
-#: public/class-content-topics-hashcode-public.php:462
-msgid "video"
-msgstr ""
-
-#: admin/class-content-topics-hashcode-admin.php:163
+#: admin/class-content-topics-hashcode-admin.php:162
 msgid "Videos"
 msgstr ""
 

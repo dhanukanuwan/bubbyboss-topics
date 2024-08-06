@@ -39,11 +39,12 @@
 				<div class="d-flex align-items-center">
 					<span class="text-capitalize">
 						<i class="bb-icon-l buddyboss bb-icon-tag" aria-hidden="true"></i>
-						<span class="ms-1 small-text"><?php echo wp_kses_post( $topic_item['type'] ); ?></span>
+						<span class="ms-1 small-text"><?php echo wp_kses_post( $topic_item['type_translated'] ); ?></span>
 					</span>
 					<span class="ms-3">
 						<i class="bb-icon-l buddyboss bb-icon-calendar" aria-hidden="true"></i>
-						<span class="ms-1 small-text"><?php echo wp_kses_post( $topic_item['time_diff'] ); ?> <?php esc_html_e( 'ago', 'buddyboss' ); ?></span>
+						<?php /* translators: %s: date format */ ?>
+						<span class="ms-1 small-text"><?php echo wp_kses_post( sprintf( __( '%s ago', 'content-topics-hashcode' ), $topic_item['time_diff'] ) ); ?></span>
 					</span>
 				</div>
 			</div>

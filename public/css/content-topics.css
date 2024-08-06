@@ -55,6 +55,10 @@ button.load-more-icon .bb-icon-l {
 .topic-item .small-text {
   font-size: 15px;
 }
+.topic-item-title h4 {
+  font-size: 1rem;
+  line-height: 20px;
+}
 
 .title-icon-img {
   max-width: 70px;
