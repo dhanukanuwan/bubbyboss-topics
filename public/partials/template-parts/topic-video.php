@@ -14,7 +14,7 @@
 	<div class="topic-item topic-video">
 		
 		<?php if ( isset( $topic_item['video_data'] ) && ! empty( $topic_item['video_data'] ) ) : ?>
-			<div class="topic-item-img mb-3 position-relative overflow-hidden d-flex w-100 align-items-center">
+			<div class="topic-item-img mb-2 position-relative overflow-hidden d-flex w-100 align-items-center">
 				<?php echo $topic_item['video_data']['content']; //phpcs:ignore ?>
 				<a href="<?php echo esc_url( $topic_item['activity_url'] ); ?>" class="position-absolute w-100 h-100 top-0 start-0"></a>
 			</div>
@@ -36,7 +36,7 @@
 						<span class="text-dark small-text" style="--bs-text-opacity: .8;"><?php echo wp_kses_post( $topic_item['author_name'] ); ?></span>
 					</a>
 				</div>
-				<div class="d-flex align-items-center">
+				<div class="d-flex align-items-center item-meta">
 					<span class="text-capitalize">
 						<i class="bb-icon-l buddyboss bb-icon-tag" aria-hidden="true"></i>
 						<span class="ms-1 small-text"><?php echo wp_kses_post( $topic_item['type_translated'] ); ?></span>

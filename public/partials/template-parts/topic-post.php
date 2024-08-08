@@ -14,7 +14,7 @@
 	<div class="topic-item topic-post position-relative h-100 d-flex flex-column">
 		
 		<?php if ( isset( $topic_item['post_thumbnail'] ) && ! empty( $topic_item['post_thumbnail'] ) ) : ?>
-			<div class="topic-item-img mb-3 overflow-hidden d-flex w-100 align-items-center">
+			<div class="topic-item-img mb-2 overflow-hidden d-flex w-100 align-items-center">
 				<a href="<?php echo esc_url( $topic_item['post_url'] ); ?>" class="w-100">
 					<img src="<?php echo esc_url( buddypress()->plugin_url ); ?>bp-templates/bp-nouveau/images/placeholder.png" data-src="<?php echo esc_url( $topic_item['post_thumbnail'] ); ?>" alt="<?php echo esc_attr( $topic_item['post_title'] ); ?>" class="mw-100 w-100 lazy" />
 				</a>
@@ -35,13 +35,13 @@
 					<h4 class="mb-0"><?php echo wp_kses_post( $topic_item['post_title'] ); ?></h4>
 				</a>
 				<div class="d-flex flex-column justify-content-end flex-grow-1">
-					<div class="d-flex align-items-center mt-2">
+					<div class="d-flex align-items-center mt-1">
 						<i class="bb-icon-l buddyboss bb-icon-user" aria-hidden="true"></i>
 						<a href="<?php echo esc_url( $topic_item['author_profile'] ); ?>" class="ms-1">
 							<span class="text-dark small-text" style="--bs-text-opacity: .8;"><?php echo wp_kses_post( $topic_item['author_name'] ); ?></span>
 						</a>
 					</div>
-					<div class="d-flex align-items-center">
+					<div class="d-flex align-items-center item-meta">
 						<span class="text-capitalize">
 							<i class="bb-icon-l buddyboss bb-icon-tag" aria-hidden="true"></i>
 							<span class="ms-1 small-text"><?php echo wp_kses_post( $topic_item['type_translated'] ); ?></span>

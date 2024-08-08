@@ -14,7 +14,7 @@
 	<div class="topic-item topic-photo">
 		
 		<?php if ( isset( $topic_item['media_url'] ) && ! empty( $topic_item['media_url'] ) ) : ?>
-			<div class="topic-item-img mb-3 overflow-hidden d-flex w-100 align-items-center">
+			<div class="topic-item-img mb-2 overflow-hidden d-flex w-100 align-items-center">
 				<a href="<?php echo esc_url( $topic_item['activity_url'] ); ?>" class="w-100">
 					<img src="<?php echo esc_url( buddypress()->plugin_url ); ?>bp-templates/bp-nouveau/images/placeholder.png" data-src="<?php echo esc_url( $topic_item['media_url'] ); ?>" alt="<?php echo esc_attr( $topic_item['author_name'] ); ?>" class="mw-100 w-100 lazy" />
 				</a>	
@@ -38,7 +38,7 @@
 						<span class="text-dark small-text" style="--bs-text-opacity: .8;"><?php echo wp_kses_post( $topic_item['author_name'] ); ?></span>
 					</a>
 				</div>
-				<div class="d-flex align-items-center">
+				<div class="d-flex align-items-center item-meta">
 					<span class="text-capitalize">
 						<i class="bb-icon-l buddyboss bb-icon-tag" aria-hidden="true"></i>
 						<span class="ms-1 small-text"><?php echo wp_kses_post( $topic_item['type_translated'] ); ?></span>
